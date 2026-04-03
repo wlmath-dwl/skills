@@ -17,11 +17,42 @@ skill 需要两个配置文件，均位于 `.claude/skills/ones-task/` 目录下
 
 ---
 
-## 二、token（约每小时更新一次）
+## 二、Token 获取（推荐：login.sh 脚本）
 
-文件：`.claude/skills/ones-task/token`
+### 方式一：使用 login.sh 脚本（推荐）
 
-Token 有效期约 **1 小时**，过期后需重新获取：
+运行登录脚本获取 token：
+
+```bash
+# 方式1：命令行直接指定账号密码
+bash ~/.claude/skills/ones-task/scripts/login.sh -e "your-email@example.com" -p "your-password"
+
+# 方式2：先配置 config.yaml，再运行脚本
+# 创建 config.yaml（见下方配置说明）
+bash ~/.claude/skills/ones-task/scripts/login.sh
+```
+
+**生成的 token 是永久有效的，请务必保存好！**
+
+登录成功后，token 和 user_id 会自动写入 skill 目录：
+- Token 保存到 `~/.claude/skills/ones-task/token`
+- User ID 保存到 `~/.claude/skills/ones-task/user-id`
+
+### config.yaml 配置（可选）
+
+在 skill 目录下创建 `config.yaml`：
+
+```yaml
+host: "https://ones.realsee.com"
+email: "your-email@example.com"
+password: "your-password"
+```
+
+---
+
+## 三、手动获取 Token（备选方式）
+
+如果脚本不可用，可手动从浏览器获取：
 
 1. 打开浏览器，进入 [ONES](https://ones.realsee.com) 任意页面
 2. 按 `F12` 打开开发者工具，切到 **Network（网络）** 面板
@@ -33,7 +64,8 @@ Token 有效期约 **1 小时**，过期后需重新获取：
 
 ---
 
-## 说明
+## 重要提示
 
-- 两个文件中只放内容本身，不加引号、不加前缀
 - Token 是个人凭证，**不要提交到 Git**
+- login.sh 生成的 token 为永久有效，**请妥善保存**
+- 两个文件中只放内容本身，不加引号、不加前缀
