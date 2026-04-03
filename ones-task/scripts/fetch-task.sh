@@ -40,17 +40,60 @@ fi
 
 ONES_HOST="https://ones.realsee.com"
 
-read -r ONES_TEAM_UUID TASK_UUID <<< "$(python3 -c "
+# 解析输入：支持完整 URL 或仅 taskUUID
+# 完整 URL: https://ones.realsee.com/project/#/workspace/team/8kZMQ1TP/filter/view/ft-t-001/task/B45rgjWC7PHpdPKm/3s7qhfb396u50
+# 仅 taskUUID: B45rgjWC7PHpdPKm
+INPUT="$1"
+
+# 检查是否为纯 taskUUID（16位字母数字混合，ONES taskUUID 格式）
+if [[ "$INPUT" =~ ^[A-Za-z0-9]{16}$ ]]; then
+    # 仅 taskUUID，需要从固定 team 获取（或后续接口动态获取）
+    TASK_UUID="$INPUT"
+    # 由于 teamUUID 未知，尝试从任务接口动态获取
+    # 先尝试从本地配置读取默认 team（可选）
+    TEAM_CONFIG="$SCRIPT_DIR/../team-uuid"
+    if [[ -f "$TEAM_CONFIG" ]]; then
+        ONES_TEAM_UUID=$(tr -d '[:space:]' < "$TEAM_CONFIG")
+    else
+        # 通过搜索 task 获取 teamUUID（需要 token 有权限）
+        SEARCH_RESULT=$(curl -s -X GET \
+            "${ONES_HOST}/project/api/project/team/-/task/${TASK_UUID}/info" \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${ONES_TOKEN}" \
+            -H "Ones-User-Id: ${ONES_USER_ID}" \
+            -H "Referer: ${ONES_HOST}/project/" || true)
+        ONES_TEAM_UUID=$(python3 -c "
+import json, sys, re
+try:
+    data = json.loads(sys.argv[1])
+    if data.get('team_uuid'):
+        print(data['team_uuid'])
+    elif data.get('team'):
+        print(data['team'].get('uuid', ''))
+except: pass
+" "$SEARCH_RESULT" 2>/dev/null || echo "")
+    fi
+    if [[ -z "$ONES_TEAM_UUID" ]]; then
+        echo "错误：仅 taskUUID 模式需要配置默认 teamUUID，请创建 $SCRIPT_DIR/../team-uuid 文件" >&2
+        exit 1
+    fi
+else
+    # 完整 URL，解析 team 和 task
+    read -r ONES_TEAM_UUID TASK_UUID <<< "$(python3 -c "
 import re, sys
 url = sys.argv[1]
 team = (re.search(r'/team/([A-Za-z0-9]+)', url) or type('', (), {'group': lambda *a: ''})()).group(1)
 task = (re.search(r'/task/([A-Za-z0-9]+)', url) or type('', (), {'group': lambda *a: ''})()).group(1)
 print(team, task)
 " "$INPUT")"
+fi
 
 if [[ -z "$ONES_TEAM_UUID" || -z "$TASK_UUID" ]]; then
-  echo "错误：无法从 URL 中解析 team UUID 或 task UUID，请确认 URL 格式正确。" >&2
-  exit 1
+    echo "错误：无法从输入中解析 team UUID 或 task UUID，请确认 URL 格式正确或传入有效的 taskUUID。" >&2
+    echo "支持的格式：" >&2
+    echo "  - 完整 URL: https://ones.realsee.com/project/#/workspace/team/8kZMQ1TP/filter/view/ft-t-001/task/B45rgjWC7PHpdPKm/3s7qhfb396u50" >&2
+    echo "  - 仅 taskUUID: B45rgjWC7PHpdPKm（需配置默认 team）" >&2
+    exit 1
 fi
 
 TASK_JSON=$(curl -s -X GET \

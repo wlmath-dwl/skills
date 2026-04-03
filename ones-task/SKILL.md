@@ -23,6 +23,33 @@
 
 ## Token 获取与更新方式见 [token-update.md](./token-update.md)。
 
+## 支持的输入格式
+
+脚本支持两种输入格式：
+
+### 格式一：完整 URL
+```
+/ones-task https://ones.realsee.com/project/#/workspace/team/8kZMQ1TP/filter/view/ft-t-001/task/B45rgjWCx6Iw2wTS/3s7qhfb396u50
+```
+
+### 格式二：仅 taskUUID（推荐，更简洁）
+```
+/ones-task B45rgjWCx6Iw2wTS
+```
+仅 taskUUID 模式需要配置默认 teamUUID（见下文）。
+
+## 配置默认 teamUUID
+
+当使用仅 taskUUID 格式时，需要配置默认 teamUUID：
+
+```bash
+# 创建 team-uuid 文件，写入你的 team UUID
+echo "8kZMQ1TP" > ~/.claude/skills/ones-task/team-uuid
+```
+
+teamUUID 可从 ONES URL 中获取，例如：
+`https://ones.realsee.com/project/#/workspace/team/8kZMQ1TP/...`
+
 ## 登录配置（可选）
 首次使用需先运行登录脚本，支持两种方式：
 
