@@ -117,3 +117,42 @@ bash .claude/skills/ones-task/scripts/fetch-task.sh "$ARGUMENTS"
 <text>
 ...
 ```
+
+## 飞书文档链接自动获取
+
+当 ONES 描述中包含飞书文档链接时，可自动获取文档内容。
+
+### 支持的链接格式
+
+- 云文档：`https://xxx.feishu.cn/docx/XXXXX`
+- 电子表格：`https://xxx.feishu.cn/sheets/XXXXX`
+- 知识库：`https://xxx.feishu.cn/wiki/XXXXX`
+
+### 获取方式
+
+使用 feishu CLI 获取：
+
+```bash
+# 云文档（docx）
+feishu doc fetch <doc_token>
+
+# 电子表格
+feishu sheets info --spreadsheet_token <token>
+
+# 知识库（需先判断类型）
+feishu wiki node get <wiki_token>
+```
+
+### 自动化脚本
+
+可使用 `fetch-task-with-feishu.sh` 脚本，自动提取描述中的飞书链接并获取内容：
+
+```bash
+bash ones-task/scripts/fetch-task-with-feishu.sh "<ONES任务URL>"
+```
+
+该脚本会：
+1. 获取 ONES 工作项详情
+2. 自动提取描述中的飞书链接
+3. 调用 feishu CLI 获取文档内容
+4. 合并输出
