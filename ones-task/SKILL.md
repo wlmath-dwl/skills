@@ -2,17 +2,25 @@
 
 根据 ONES 工作项页面 URL，获取该工作项的**标题**、**描述**和**评论**。
 
-## 用法
+## 触发方式
 
+**显式调用**：
 ```
 /ones-task <完整页面URL>
-/ones-task -login 
 ```
+
+**隐式调用**（关键词）：
+- "ONES 工作项"、"ones 任务"、"查看 ONES"
+- "ones-task"、"ones task"
+- URL 包含 "ones.realsee.com" 和 "task/"
 
 例如：
 ```
 /ones-task https://ones.realsee.com/project/#/workspace/team/8kZMQ1TP/filter/view/ft-t-001/task/B45rgjWCx6Iw2wTS/3s7qhfb396u50
+
+或者直接说：帮我查一下这个 ONES 任务的详情
 ```
+
 ## Token 获取与更新方式见 [token-update.md](./token-update.md)。
 
 ## 登录配置（可选）
