@@ -16,6 +16,11 @@ description: >
 ## 用法
 
 ```bash
+# 从 GitHub 仓库安装 skill（兼容 skills.sh 生态）
+skill-installer-cli add owner/repo --skill skill-name
+skill-installer-cli add https://github.com/vercel-labs/agent-skills --skill frontend-design
+skill-installer-cli add anthropics/skills  # 交互选择
+
 # 安装 skill（使用默认仓库）
 skill-installer-cli install <skill-name>
 
@@ -58,6 +63,31 @@ bash <(curl -fsSL https://git.lianjia.com/gaoran007/skills/raw/master/skill-inst
 cd skill-installer-cli
 go build -o skill-installer-cli .
 ```
+
+## 命令
+
+### add — 从 GitHub 仓库安装 skill
+
+兼容 [skills.sh](https://skills.sh/) 生态，类似 `npx skills add`。
+
+```bash
+skill-installer-cli add <source> [--skill <name>] [--local]
+```
+
+支持的 source 格式：
+
+| 格式 | 示例 |
+|------|------|
+| GitHub shorthand | `owner/repo` |
+| 完整 GitHub URL | `https://github.com/owner/repo` |
+| SSH URL | `git@github.com:owner/repo.git` |
+
+| Flag | 缩写 | 说明 |
+|------|------|------|
+| `--skill` | `-s` | 指定 skill 名称（可多次使用） |
+| `--local` | `-l` | 安装到当前项目目录（默认安装到用户目录） |
+
+自动搜索仓库中以下位置的 skill：根目录、`skills/`、`.agents/skills/`、`.claude/skills/`、`.kiro/skills/`、`.codex/skills/`、`.cursor/skills/`
 
 ## 依赖
 
