@@ -156,3 +156,50 @@ bash ones-task/scripts/fetch-task-with-feishu.sh "<ONES任务URL>"
 2. 自动提取描述中的飞书链接
 3. 调用 feishu CLI 获取文档内容
 4. 合并输出
+
+## Trace ID 自动识别与日志查询
+
+当 ONES 工作项的描述或评论中包含 trace_id 时，可自动调用 `trace-log-query` SKILL 查询相关日志。
+
+### 支持的 trace_id 格式
+
+- **JSON 格式**（完整响应体）：
+  ```json
+  {"request_id":"20260409190510-10420123-58cc80a0f349ab1545b9961abd952e3f","trace_id":"60b7224e5c7cbbdc8fa7ae7f20624ef5","business_code":"50","code":-1,"status":"error message","data":null}
+  ```
+
+- **JSON 片段**（仅 trace_id）：
+  ```json
+  "trace_id":"60b7224e5c7cbbdc8fa7ae7f20624ef5"
+  ```
+
+### 正则匹配规则
+
+使用以下正则表达式识别 trace_id：
+```
+"trace_id"\s*:\s*"([a-f0-9]{32})"
+```
+
+### 调用方式
+
+识别到 trace_id 后，使用 Agent 工具（subagent_type: "general-purpose"，prompt: "Use Skill tool to invoke trace-log-query for trace_id '<trace_id>'"）。接收返回信息即可，不必加载查询的上下文进来。
+
+### 处理流程
+
+1. 获取 ONES 工作项详情后，检查描述和评论中是否包含 trace_id
+2. 若发现 trace_id，提取所有匹配的 trace_id 值
+3. 使用 Agent 工具启动 SubAgent，传递 trace_id 参数
+4. 接收 SubAgent 返回的日志查询结果
+5. 将结果展示给用户，**无需将完整日志上下文加载到主对话中**
+
+### 示例
+
+当评论中包含：
+```
+接口报错了：{"trace_id":"60b7224e5c7cbbdc8fa7ae7f20624ef5","code":-1,"status":"hash config is nil"}
+```
+
+系统会自动：
+1. 提取 trace_id: `60b7224e5c7cbbdc8fa7ae7f20624ef5`
+2. 调用 trace-log-query SKILL 查询日志
+3. 返回查询结果
