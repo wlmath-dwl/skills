@@ -106,10 +106,49 @@ def search_logs(trace_id: str, start_time: int = None, end_time: int = None, pag
     return response.json()
 
 
+def deep_parse_json(obj):
+    """递归解析所有嵌套的 JSON 字符串"""
+    if isinstance(obj, str):
+        try:
+            parsed = json.loads(obj)
+            return deep_parse_json(parsed)
+        except (json.JSONDecodeError, ValueError):
+            return obj
+    elif isinstance(obj, dict):
+        return {k: deep_parse_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [deep_parse_json(item) for item in obj]
+    return obj
+
+
+def try_parse_json(s: str):
+    """尝试解析 JSON，尽可能处理各种转义情况"""
+    if not s:
+        return None
+
+    # 尝试直接解析
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        pass
+
+    # 尝试去除一层转义后解析
+    try:
+        # 处理 \" 转义
+        normalized = s.replace('\\"', '"')
+        return json.loads(normalized)
+    except json.JSONDecodeError:
+        pass
+
+    # 无法解析，返回 None
+    return None
+
+
 def format_logs(logs_data: dict) -> str:
-    """格式化日志输出"""
-    if logs_data.get("code") != 0:
-        return f"查询失败: {logs_data.get('message', '未知错误')}"
+    """格式化日志输出，返回原始日志内容"""
+    # 检查是否有错误信息
+    if logs_data.get("message"):
+        return f"查询失败: {logs_data.get('message')}"
 
     items = logs_data.get("data", {}).get("items", [])
     if not items:
@@ -122,14 +161,44 @@ def format_logs(logs_data: dict) -> str:
     output.append("")
 
     for i, log in enumerate(items, 1):
-        timestamp = log.get("log_time", "")
+        timestamp = log.get("log_time", "") or log.get("@timestamp", "")
         level = log.get("level", "")
         app_name = log.get("app_name", "")
-        message = log.get("message", "")
         uri = log.get("uri", "")
+        log_type = log.get("log_type", "")
 
-        output.append(f"### {i}. [{timestamp}] [{level}] [{app_name}] [{uri}]")
-        output.append(f"```{message}```")
+        output.append(f"### {i}. [{timestamp}] [{level}] [{app_name}] [{uri}] [{log_type}]")
+
+        # 解析 context 字段中的 JSON
+        context = log.get("context", "")
+        if context:
+            parsed = try_parse_json(context)
+            if parsed:
+                # 递归解析嵌套的 JSON 字符串
+                parsed = deep_parse_json(parsed)
+                output.append("```json")
+                output.append(json.dumps(parsed, indent=2, ensure_ascii=False))
+                output.append("```")
+            else:
+                # 无法解析，显示原始内容（先去除转义）
+                normalized = context.replace('\\"', '"')
+                output.append("```")
+                output.append(normalized)
+                output.append("```")
+
+        # 解析 extra 字段中的 JSON
+        extra = log.get("extra", "")
+        if extra:
+            try:
+                extra_json = json.loads(extra)
+                extra_json = deep_parse_json(extra_json)
+                output.append("**extra:**")
+                output.append("```json")
+                output.append(json.dumps(extra_json, indent=2, ensure_ascii=False))
+                output.append("```")
+            except json.JSONDecodeError:
+                pass
+
         output.append("")
 
     return "\n".join(output)
