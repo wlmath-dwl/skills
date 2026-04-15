@@ -6,18 +6,10 @@
 
 ## 安装
 
-一键安装（需要 Go 和 Git）：
+### 下载预编译二进制
 
 ```bash
-bash <(curl -fsSL https://git.lianjia.com/gaoran007/skills/raw/master/skill-installer-cli/install.sh)
-```
-
-或手动构建：
-
-```bash
-cd skill-installer-cli
-go build -o skill-installer-cli .
-mv skill-installer-cli /usr/local/bin/
+curl -L "https://git.lianjia.com/gaoran007/skills/-/raw/master/skill-installer-cli/skill-installer-cli?ref_type=heads&inline=false" -o ./skill-installer-cli && chmod +x ./skill-installer-cli
 ```
 
 ## 支持的 Agent
@@ -31,19 +23,52 @@ mv skill-installer-cli /usr/local/bin/
 
 ## 命令
 
-### install — 安装 skill
+### install — 从 Git 仓库安装 skill
 
 ```bash
-skill-installer-cli install <skill-name> [flags]
+skill-installer-cli install [source] [flags]
 ```
 
-| Flag | 缩写 | 默认值 | 说明 |
-|------|------|--------|------|
-| `--repo` | `-r` | `https://git.lianjia.com/gaoran007/skills` | Git 仓库地址 |
-| `--branch` | `-b` | `master` | Git 分支 |
-| `--target` | `-t` | (无) | 指定目录，跳过 Agent 选择 |
+不指定 `source` 时使用内部默认仓库。
 
-不指定 `-t` 时，会交互提示选择目标 Agent：
+支持的 source 格式：
+
+| 格式 | 示例 |
+|------|------|
+| GitHub shorthand | `owner/repo` |
+| 完整 URL | `https://github.com/owner/repo` |
+| SSH URL | `git@github.com:owner/repo.git` |
+
+| Flag | 缩写 | 说明 |
+|------|------|------|
+| `--repo` | `-r` | Git 仓库地址（覆盖 source 参数） |
+| `--skill` | `-s` | 指定 skill 名称（可多次使用） |
+| `--agent` | `-a` | 指定目标 Agent（可多次使用，如 kiro/claude/codex/cursor） |
+| `--local` | `-l` | 安装到当前项目目录（默认安装到用户目录） |
+
+示例：
+
+```bash
+# 从默认仓库安装指定 skill
+skill-installer-cli install --skill ones-task
+
+# 安装多个 skill
+skill-installer-cli install --skill ones-task --skill find-skills
+
+# 指定目标 Agent（跳过交互选择）
+skill-installer-cli install --skill ones-task --agent kiro --agent claude
+
+# 从 GitHub 仓库安装
+skill-installer-cli install anthropics/skills --skill find-skills
+
+# 完整 URL
+skill-installer-cli install https://github.com/vercel-labs/agent-skills --skill web-design-guidelines
+
+# 安装到当前项目目录
+skill-installer-cli install --local --skill ones-task
+```
+
+不指定 `--skill` 时会列出仓库中所有可用 skill 并全部安装。不指定 `--agent` 时会弹出交互式选择器：
 
 ```
 选择 Agent (↑↓移动  Tab/空格切换  Enter确认):
@@ -53,44 +78,53 @@ skill-installer-cli install <skill-name> [flags]
   [ ] cursor (.cursor/skills)
 ```
 
+自动搜索仓库中以下位置的 skill：
+- 根目录（如果包含 SKILL.md）
+- `skill/`、`skills/`
+- `.agents/skills/`
+- `.claude/skills/`、`.kiro/skills/`
+- `.codex/skills/`、`.cursor/skills/`
+
+### copy — 在 Agent 之间复制 skill
+
+```bash
+skill-installer-cli copy --from <agent> --to <agent> [flags]
+```
+
+| Flag | 缩写 | 说明 |
+|------|------|------|
+| `--from` | | 源 Agent 名称（必填） |
+| `--to` | | 目标 Agent 名称（必填） |
+| `--skill` | `-s` | 指定要复制的 skill（可多次使用，不指定则复制全部） |
+| `--local` | `-l` | 使用当前项目目录（默认用户目录） |
+
 示例：
 
 ```bash
-# 使用默认仓库安装
-skill-installer-cli install ones-task
+# 复制单个 skill
+skill-installer-cli copy --from claude --to kiro --skill ones-task
 
-# 自定义仓库
-skill-installer-cli install ones-task -r https://git.example.com/skills
+# 复制全部 skill
+skill-installer-cli copy --from kiro --to cursor
 
-# 指定分支
-skill-installer-cli install ones-task -b develop
-
-# 直接安装到指定目录
-skill-installer-cli install ones-task -t ./.kiro/skills
+# 使用当前项目目录
+skill-installer-cli copy --from claude --to kiro --local
 ```
 
-安装流程：
-
-1. 交互选择目标 Agent（或通过 `-t` 指定目录）
-2. 克隆指定分支到临时目录（只克隆一次）
-3. 校验 skill 目录和 `SKILL.md` 是否存在
-4. 复制到每个选中 Agent 的 skills 目录
-5. 清理临时文件
-
-### list — 列出已安装的 skills
+### list — 列出已安装的 skill
 
 ```bash
 skill-installer-cli list [flags]
 ```
 
-| Flag | 缩写 | 默认值 | 说明 |
-|------|------|--------|------|
-| `--dir` | `-d` | (无) | 指定目录，不指定则列出所有 Agent |
+| Flag | 缩写 | 说明 |
+|------|------|------|
+| `--dir` | `-d` | 指定目录（不指定则列出所有 Agent） |
 
 示例：
 
 ```bash
-# 列出所有 Agent 的 skills
+# 列出所有 Agent 的 skill
 skill-installer-cli list
 
 # 列出指定目录
