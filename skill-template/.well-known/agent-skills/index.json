@@ -1,9 +1,0 @@
-{
-  "skills": [
-    {
-      "name": "skill-template",
-      "description": "新建或更新 Claude Code 技能(Skill)的模板规范。触发关键词：新建 skill、更新 skill、skill 模板、创建 skill 规范。",
-      "entry": "SKILL.md"
-    }
-  ]
-}

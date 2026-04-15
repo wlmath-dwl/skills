@@ -8,8 +8,10 @@
 
 ### 下载预编译二进制
 
+[下载 skill-installer-cli](https://git.lianjia.com/gaoran007/skills/-/blob/master/skill-installer-cli/skill-installer-cli?ref_type=heads)
+
 ```bash
-curl -L "https://git.lianjia.com/gaoran007/skills/-/raw/master/skill-installer-cli/skill-installer-cli?ref_type=heads&inline=false" -o ./skill-installer-cli && chmod +x ./skill-installer-cli
+chmod +x ./skill-installer-cli
 ```
 
 ## 支持的 Agent
