@@ -6,18 +6,10 @@
 
 ## 安装
 
-一键安装（需要 Go 和 Git）：
+### 下载预编译二进制
 
 ```bash
-bash <(curl -fsSL https://git.lianjia.com/gaoran007/skills/raw/master/skill-installer-cli/install.sh)
-```
-
-或手动构建：
-
-```bash
-cd skill-installer-cli
-go build -o skill-installer-cli .
-mv skill-installer-cli /usr/local/bin/
+curl -L "https://git.lianjia.com/gaoran007/skills/-/raw/master/skill-installer-cli/skill-installer-cli?ref_type=heads&inline=false" -o ./skill-installer-cli && chmod +x ./skill-installer-cli
 ```
 
 ## 支持的 Agent
