@@ -1,0 +1,7 @@
+interface:
+  display_name: "i18n-lang"
+  short_description: "Extract diff keys, review them locally, translate, and apply locales"
+  default_prompt: "Use $i18n-lang to read agent.md i18n config, extract changed keys, open the local review page, translate confirmed copy directly with the active LLM, validate the JSON, and write the locale files."
+
+policy:
+  allow_implicit_invocation: true

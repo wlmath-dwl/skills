@@ -1,0 +1,144 @@
+{
+  "generated_at": "2026-04-30T10:28:54+0800",
+  "source_path": "/Users/beike/.codex/skills",
+  "repo_path": "/Users/beike/project/skills",
+  "skill_count": 17,
+  "skills": [
+    {
+      "name": "codex-primary-runtime",
+      "relative_path": "skills/codex-primary-runtime",
+      "has_skill_md": false,
+      "file_count": 0,
+      "bytes": 0,
+      "latest_mtime_iso": null
+    },
+    {
+      "name": "feishu",
+      "relative_path": "skills/feishu",
+      "has_skill_md": true,
+      "file_count": 14,
+      "bytes": 128005,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "frontend-dev",
+      "relative_path": "skills/frontend-dev",
+      "has_skill_md": false,
+      "file_count": 0,
+      "bytes": 0,
+      "latest_mtime_iso": null
+    },
+    {
+      "name": "go-5xx-prevention",
+      "relative_path": "skills/go-5xx-prevention",
+      "has_skill_md": true,
+      "file_count": 2,
+      "bytes": 13611,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "go-unit-test",
+      "relative_path": "skills/go-unit-test",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 7283,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "i18n-apply-translated-keys",
+      "relative_path": "skills/i18n-apply-translated-keys",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 6858,
+      "latest_mtime_iso": "2026-04-16T15:58:37+0800"
+    },
+    {
+      "name": "i18n-keys-from-branch-diff",
+      "relative_path": "skills/i18n-keys-from-branch-diff",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 7787,
+      "latest_mtime_iso": "2026-04-16T15:41:38+0800"
+    },
+    {
+      "name": "i18n-lang",
+      "relative_path": "skills/i18n-lang",
+      "has_skill_md": true,
+      "file_count": 6,
+      "bytes": 63866,
+      "latest_mtime_iso": "2026-04-27T11:00:04+0800"
+    },
+    {
+      "name": "lark-test-doc",
+      "relative_path": "skills/lark-test-doc",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 6893,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "ones-task",
+      "relative_path": "skills/ones-task",
+      "has_skill_md": true,
+      "file_count": 7,
+      "bytes": 19219,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "realsee-pano-to-vr",
+      "relative_path": "skills/realsee-pano-to-vr",
+      "has_skill_md": true,
+      "file_count": 2,
+      "bytes": 16482,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "skill-forensic-review",
+      "relative_path": "skills/skill-forensic-review",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 2988,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "skill-installer",
+      "relative_path": "skills/skill-installer",
+      "has_skill_md": true,
+      "file_count": 2,
+      "bytes": 3301,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "skill-installer-cli",
+      "relative_path": "skills/skill-installer-cli",
+      "has_skill_md": true,
+      "file_count": 12,
+      "bytes": 3205671,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "skill-template",
+      "relative_path": "skills/skill-template",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 2741,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "trace-log-query",
+      "relative_path": "skills/trace-log-query",
+      "has_skill_md": true,
+      "file_count": 3,
+      "bytes": 14380,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    },
+    {
+      "name": "write-tech-doc",
+      "relative_path": "skills/write-tech-doc",
+      "has_skill_md": true,
+      "file_count": 1,
+      "bytes": 1762,
+      "latest_mtime_iso": "2026-04-15T11:29:41+0800"
+    }
+  ]
+}
